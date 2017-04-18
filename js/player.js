@@ -1,10 +1,15 @@
 class Player {
-    constructor(stage, stageWidth, stageHeight, x, y) {
+    constructor(stage, stageWidth, stageHeight, map, mapWidth, mapHeight, x, y) {
         var that = this;
 
+        //need the stage in order to get mouse coordinates
         this.__stage = stage;
         this.__stageWidth = stageWidth;
         this.__stageHeight = stageHeight;
+
+        this.__map = map;
+        this.__mapWidth = mapWidth;
+        this.__mapHeight = mapHeight;
 
         // Sprite
         this.__size = 25;
@@ -32,7 +37,7 @@ class Player {
         this.__projectiles = [];
 
         // Player
-        this.__particleEmitter = new LineParticleEmitter(this.__stage, 1, 50, "black", 25);
+        this.__particleEmitter = new LineParticleEmitter(this.__map, 1, 50, "black", 25);
 
         // Movement variables
         this.__movingRight = false;
@@ -58,12 +63,15 @@ class Player {
         }, false);
     }
 
+    get x ()       { return this.__sprite.x }
+    get y ()       { return this.__sprite.y }
+
     show() {
-        this.__displayObject = this.__stage.addChild(this.__sprite);
+        this.__displayObject = this.__map.addChild(this.__sprite);
     }
 
     remove() {
-        this.__stage.removeChild(this.__displayObject);
+        this.__map.removeChild(this.__displayObject);
     }
 
     update() {
@@ -73,7 +81,7 @@ class Player {
        this.updateProjectiles();
 
        if (this.__isShooting) {
-            this.shoot();
+            //this.shoot(); replace instances of "stage" with "map" before uncommenting
         }
     }
 
@@ -125,10 +133,10 @@ class Player {
 
     rotate(mouseX, mouseY) {
         if (!mouseX || !mouseY) {
-            mouseX = this.__stageWidth/2;
+            mouseX = this.__mapWidth/2;
             mouseY = 0;
         }
-        this.__angle = Math.atan2(mouseY - this.__sprite.y, mouseX - this.__sprite.x);
+        this.__angle = Math.atan2(mouseY - this.__stageHeight/2, mouseX - this.__stageWidth/2);
         this.__angle = this.__angle * (180/Math.PI);
 
         if(this.__angle < 0) {
@@ -148,14 +156,14 @@ class Player {
         if (this.__sprite.x < 0) {
             this.__sprite.x = 0;
         }
-        if (this.__sprite.x > this.__stageWidth) {
-            this.__sprite.x = this.__stageWidth;
+        if (this.__sprite.x > this.__mapWidth) {
+            this.__sprite.x = this.__mapWidth;
         }
         if (this.__sprite.y < 0) {
             this.__sprite.y = 0;
         }
-        if (this.__sprite.y > this.__stageHeight) {
-            this.__sprite.y = this.__stageHeight;
+        if (this.__sprite.y > this.__mapHeight) {
+            this.__sprite.y = this.__mapHeight;
         }
     }
 
@@ -179,9 +187,9 @@ class Player {
                 this.__projectileSize,
                 this.__angle,
                 "black",
-                this.__stage,
-                this.__stageWidth,
-                this.__stageHeight);
+                this.__map,
+                this.__mapWidth,
+                this.__mapHeight);
             this.__projectiles.push(projectile);
             projectile.show();
 

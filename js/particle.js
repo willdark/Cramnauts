@@ -1,6 +1,6 @@
 class ParticleEmitter {
-    constructor(stage, delta, fadeTime, color) {
-        this.__stage = stage;
+    constructor(map, delta, fadeTime, color) {
+        this.__map = map;
         this.__particles = [];
         this.__delta = delta; //time between particles
         this.__fadeTime = fadeTime;
@@ -15,8 +15,8 @@ class ParticleEmitter {
 
 //Emits particles along a line
 class LineParticleEmitter extends ParticleEmitter {
-    constructor(stage, delta, fadeTime, color, length) {
-        super(stage, delta, fadeTime, color);
+    constructor(map, delta, fadeTime, color, length) {
+        super(map, delta, fadeTime, color);
         this.__length = length;
     }
 
@@ -33,7 +33,7 @@ class LineParticleEmitter extends ParticleEmitter {
             let particle = new Particle(_x, _y, this.__fadeTime, this.__color);
             this.__particles.push(particle);
 
-            particle.displayObject = this.__stage.addChild(particle.sprite);
+            particle.displayObject = this.__map.addChild(particle.sprite);
 
             this.__lastEmitInst = Date.now();
         }
@@ -47,7 +47,7 @@ class LineParticleEmitter extends ParticleEmitter {
             //clean up old particles
             if (particle.canBeDestroyed) {
                 //particle.__sprite.graphics.clear();
-                that.__stage.removeChild(particle.displayObject);
+                that.__map.removeChild(particle.displayObject);
                 particles.splice(index, 1);
             }
         });
