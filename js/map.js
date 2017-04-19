@@ -31,7 +31,7 @@ class Map {
         for (let i = 0; i <= 10000; i=i+520) {
             for (let j = 0; j <= 10000; j=j+520) {
                 let rect = new createjs.Shape();
-                rect.graphics.beginFill("red").drawRect(i, j, 500, 500);
+                rect.graphics.beginFill("#BDBDBD").drawCircle(i, j, 100);
                 this.addChild(rect);
             }
         }
